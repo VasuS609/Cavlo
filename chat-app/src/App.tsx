@@ -18,6 +18,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="app-container">
+ 
         <div className="loading-state">
           <div className="loading-text">Loading Auth0...</div>
           <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>

@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/VasuS609/RealtimApp#readme",
   "dependencies": {
-    "motion": "^12.23.25"
+    "clsx": "^2.1.1",
+    "motion": "^12.23.25",
+    "tailwind-merge": "^3.4.0"
   }
 }
