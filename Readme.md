@@ -8,3 +8,5 @@ database - centeral place- compute can easily done - scaling  become easy  - asg
 relayer ws - connects all back.. server
 ws-user
 react/next
+
+//firebase -> signalling device

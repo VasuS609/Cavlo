@@ -53,7 +53,12 @@ export default function LandingPage() {
       >
         Login
       </button>
-
+      <button
+        onClick={() => navigate("/cavlo")}
+        className="mt-4 bg-white text-black px-4 py-2 rounded"
+      >
+        Cavlo
+      </button>
       <div
         style={{
           width: "80vmin",
