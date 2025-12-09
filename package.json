@@ -1,5 +1,5 @@
 {
-  "name": "realtime-app",
+  "name": "cavlo",
   "version": "1.0.0",
   "description": "stateless | stateful be (to scale up easily) (db store data) | hard to scale up/down - chatapp, trading, gaming, excalidraw, bidirectional pipe",
   "main": "index.js",
