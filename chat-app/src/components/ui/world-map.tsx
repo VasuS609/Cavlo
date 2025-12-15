@@ -12,11 +12,13 @@ interface MapProps {
     end: { lat: number; lng: number; label?: string };
   }>;
   lineColor?: string;
+  className?: string;
 }
 
 export function WorldMap({
   dots = [],
   lineColor = "#0ea5e9",
+  className = "",
 }: MapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const map = new DottedMap({ height: 100, grid: "diagonal" });
@@ -25,9 +27,9 @@ export function WorldMap({
 
   const svgMap = map.getSVG({
     radius: 0.22,
-    color: theme === "dark" ? "#FFFFFF40" : "#00000040",
+    color: "#FFFFFF40",
     shape: "circle",
-    backgroundColor: theme === "dark" ? "black" : "white",
+    backgroundColor: "transparent",
   });
 
   const projectPoint = (lat: number, lng: number) => {
@@ -46,13 +48,13 @@ export function WorldMap({
   };
 
   return (
-    <div className="w-full aspect-[1/0.8] dark:bg-black bg-white rounded-lg  relative font-sans">
+    <div className={`w-full aspect-[1/0.8] bg-transparent rounded-lg relative font-sans ${className}`}>
       <img
         src={`data:image/svg+xml;utf8,${encodeURIComponent(svgMap)}`}
-        className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"
+        className="h-full w-full mask-[linear-gradient(to_bottom,transparent,white_10%,white_90%,transparent)] pointer-events-none select-none"
         alt="world map"
-        height="495"
-        width="1056"
+        height="248"
+        width="528"
         draggable={false}
       />
       <svg

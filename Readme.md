@@ -1,8 +1,19 @@
-# 💬 Real-Time Chat Application
+# 💬 Cavlo - Real-Time Video Chat & Communication Platform
 
-A scalable WebSocket-based chat app with Auth0 authentication.
+A scalable WebRTC-based video chat application with Auth0 authentication, featuring real-time communication, interactive 3D globe, and modern UI.
 
-## 🏗️ Architecture: Stateless vs Stateful
+## ✨ Features
+
+- 🎥 **Video/Audio Calls** - WebRTC peer-to-peer connections
+- 💬 **Real-time Chat** - WebSocket-based messaging
+- 🌍 **3D Globe** - Interactive Three.js globe with connection arcs
+- 🗺️ **World Map** - Animated dotted world map showing global connections
+- 🔐 **Auth0** - Secure authentication
+- 🎨 **Modern UI** - Tailwind CSS v4 + Framer Motion animations
+
+## 🏗️ Architecture
+
+### Stateless vs Stateful Design
 
 | Stateless (Our Approach) | Stateful |
 |--------------------------|----------|
@@ -10,14 +21,33 @@ A scalable WebSocket-based chat app with Auth0 authentication.
 | ✅ State in database | ❌ State in memory |
 | ✅ Any server handles requests | ❌ Tied to specific server |
 
-### Architecture Pattern
+### System Architecture
 
 ```
-React Frontend ──WebSocket──> Gateway (Relayer) ──> Database
-                              (Stateless)           (Centralized State)
+React Frontend ──WebSocket/Socket.IO──> Relayer WS Server ──> Peer Connections
+   (Vite)                                (Express + Socket.IO)      (WebRTC)
+     │                                           │
+     │                                           ├─ Socket.IO (port 8081)
+     └─ Auth0 ──────────────────────────────────┴─ WebSocket (port 8082)
 ```
 
-**Examples:** Excalidraw, Second Brain apps, Trading platforms, Gaming lobbies
+## 📦 Project Structure
+
+```
+Cavlo/
+├── chat-app/              # Frontend (React + Vite)
+│   ├── src/
+│   │   ├── components/    # UI components (Globe, WorldMap, Cards)
+│   │   ├── pages/         # Landing, Chat, Login pages
+│   │   ├── room/          # Video room components
+│   │   └── Chat/          # Chat functionality
+│   └── package.json
+│
+└── relayer-ws/            # Backend (Node.js + Socket.IO)
+    ├── src/
+    │   └── index.ts       # Server with Socket.IO & WebSocket
+    └── package.json
+```
 
 **Why?** Database stores state centrally → compute can happen anywhere → easy horizontal scaling
 
@@ -25,13 +55,21 @@ React Frontend ──WebSocket──> Gateway (Relayer) ──> Database
 
 ## 🚀 Quick Setup
 
-### 1. Install
+### 1. Install Backend
 
 ```bash
+cd relayer-ws
 npm install
 ```
 
-### 2. Configure Auth0
+### 2. Install Frontend
+
+```bash
+cd chat-app
+npm install
+```
+
+### 3. Configure Auth0
 
 1. Go to [Auth0 Dashboard](https://manage.auth0.com)
 2. Create **Single Page Application**
@@ -41,19 +79,38 @@ npm install
    - **Web Origins:** `http://localhost:5173`
 4. **Disable "Require Organization"** (important!)
 
-### 3. Create `.env`
+### 4. Create Environment Files
 
+**Frontend** (`chat-app/.env`):
 ```bash
 VITE_AUTH0_DOMAIN=your-domain.auth0.com
 VITE_AUTH0_CLIENT_ID=your-client-id
-VITE_WS_URL=ws://localhost:8080
 ```
 
-### 4. Run
-
+**Backend** (`relayer-ws/.env`):
 ```bash
+PORT=8081
+CHAT_PORT=8082
+CORS_ORIGIN=http://localhost:5173
+```
+
+### 5. Run the Application
+
+**Terminal 1 - Backend:**
+```bash
+cd relayer-ws
 npm run dev
 ```
+Servers start on:
+- Socket.IO: `http://localhost:8081`
+- Chat WebSocket: `ws://localhost:8082`
+
+**Terminal 2 - Frontend:**
+```bash
+cd chat-app
+npm run dev
+```
+Frontend starts on: `http://localhost:5173`
 
 ---
 

@@ -13,10 +13,10 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: { origin: allowedOrigin },
 });
-var roomId;
-app.get("/roomId", (req,res)=>{
-  roomId = req.query;
-})
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", timestamp: Date.now() });
+});
 
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
@@ -80,7 +80,7 @@ wss.on("connection", (ws) => {
   ws.on("message", (message) => {
     // Broadcast to all connected clients
     wss.clients.forEach((client) => {
-      if (client.readyState === client.OPEN) {
+      if (client.readyState === 1) { // 1 = OPEN
         client.send(message);
       }
     });

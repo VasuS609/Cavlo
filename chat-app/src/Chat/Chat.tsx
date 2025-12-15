@@ -88,7 +88,7 @@ export default function Chat() {
                     <img
                       src={msg.user.avatar}
                       alt={msg.user.name}
-                      className="w-10 h-10 rounded-full flex-shrink-0"
+                      className="w-10 h-10 rounded-full shrink-0"
                     />
 
                     {/* Message Content */}

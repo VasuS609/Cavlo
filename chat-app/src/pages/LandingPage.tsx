@@ -1,7 +1,7 @@
 import { World } from "../components/ui/globe";
 import { EncryptedText } from "../components/ui/encrypted-text";
 import { useNavigate } from "react-router-dom";
-import { WorldMap } from "../components/ui/world-map";
+import LandingPageContinue from "./LandingPageContinue";
 
 const defaultGlobeConfig = {
   pointSize: 1,
@@ -42,10 +42,9 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center bg-[#0f1720] 
-    m-0 p-0 mt-0 top-0">
+    <div className="w-full min-h-screen flex flex-col justify-start items-center bg-[#0f1720] py-8">
     {/* navbar */}
-      <div className="flex justify-end pr-10 w-full  -mt-20 top-0 bg ">
+      <div className="flex justify-end pr-10 w-full mb-8 fixed top-0 right-0 z-50">
         <button
           onClick={() => navigate("/login")}
           className="mt-4 bg-white text-black px-4 py-2 rounded"
@@ -60,54 +59,27 @@ export default function LandingPage() {
         </button>
       </div>  
       <EncryptedText
-        className="text-xl font-mono font-semibold"
+        className="text-xl font-mono font-semibold mb-8 mt-16"
         text="Welcome to the Matrix, Cavlo"/>
 
       <div
         style={{
-          width: "80vmin",
-          height: "80vmin",
+          width: "500px",
+          height: "500px",
           borderRadius: "50%",
           overflow: "hidden",
         }}
       >
+        
         <World globeConfig={defaultGlobeConfig} data={sampleData} />
 
       </div>
-       <WorldMap
-        dots={[
-          {
-            start: {
-              lat: 64.2008,
-              lng: -149.4937,
-            }, // Alaska (Fairbanks)
-            end: {
-              lat: 34.0522,
-              lng: -118.2437,
-            }, // Los Angeles
-          },
-          {
-            start: { lat: 64.2008, lng: -149.4937 }, // Alaska (Fairbanks)
-            end: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
-          },
-          {
-            start: { lat: -15.7975, lng: -47.8919 }, // Brazil (Brasília)
-            end: { lat: 38.7223, lng: -9.1393 }, // Lisbon
-          },
-          {
-            start: { lat: 51.5074, lng: -0.1278 }, // London
-            end: { lat: 28.6139, lng: 77.209 }, // New Delhi
-          },
-          {
-            start: { lat: 28.6139, lng: 77.209 }, // New Delhi
-            end: { lat: 43.1332, lng: 131.9113 }, // Vladivostok
-          },
-          {
-            start: { lat: 28.6139, lng: 77.209 }, // New Delhi
-            end: { lat: -1.2921, lng: 36.8219 }, // Nairobi
-          },
-        ]}
-      />
-    </div>
+      
+<hr className="border-gray-400 border-t-2 my-4"></hr>
+     
+     <LandingPageContinue/>
+     </div>
+     
+ 
   );
 }
