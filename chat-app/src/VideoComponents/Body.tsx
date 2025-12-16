@@ -150,19 +150,52 @@ export default function Body() {
         }
       });
 
+      
       socket.on("offer", async ({ from, sdp }) => {
+        //if we already have a PC to this peer (we offered first), ignoring incoming offer
+
+        if(peersRef.current.has(from)){
+          console.warn(`Already have PC for ${from}, ignoring incoming offer`);
+          return;
+        }
+
         const pc = createPeerConnection(from, false);
+        try{        
         await pc.setRemoteDescription(new RTCSessionDescription(sdp));
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         socket.emit("answer", { to: from, sdp: answer });
+      }catch(err){
+        console.error("Error handling offer:", err)
+      }
       });
+
+// ------------------------------------------------------------------------------------------
 
       socket.on("answer", async ({ from, sdp }) => {
         const pc = peersRef.current.get(from);
-        if (!pc) return;
-        await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+        if (!pc){
+          console.warn("Received answer but no PC for ", from);
+           return;
+          }
+
+          //this is the safety chekc only set answer if we are in correct state
+        if(pc.signalingState !== "have-local-offer"){
+          console.warn(
+            `Ignoring answer from ${from}: PC is in state "${pc.signalingState}", expected "have-local-off"`
+          );
+          return;
+        }
+        try{
+           await pc.setRemoteDescription(new RTCSessionDescription(sdp));
+        }catch(err){
+          console.error("Failed to set remote answer", err);
+        }
+
+       
       });
+
+//-------------------------------------------------------------------------------------------
 
       socket.on("ice-candidate", async ({ from, candidate }) => {
         const pc = peersRef.current.get(from);

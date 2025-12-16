@@ -109,6 +109,10 @@ export default function LandingPage() {
             Cavlo
           </button>
         </div>
+
+        <div>
+          <div className="border-2 h-10 w-10 rounded-full"></div>
+        </div>
       </div>
       
       <div className="flex flex-col items-center gap-10 w-full pt-60">

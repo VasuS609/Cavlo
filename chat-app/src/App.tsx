@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
-import CallbackPage from "./pages/CallbackPage";
+import CallbackPage from "./authentication/CallbackPage";
 import ChatPage from "./pages/ChatPage";
 import Cavlo from "./Cavlo/cavlo";
 import Body from "./room/[roomId]/Room";
