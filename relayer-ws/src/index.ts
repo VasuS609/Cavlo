@@ -8,6 +8,7 @@ const app = express();
 const allowedOrigin = process.env.CORS_ORIGIN || "*";
 app.use(cors({ origin: allowedOrigin }));
 
+
 const PORT = Number(process.env.PORT) || 8081;
 const server = http.createServer(app);
 const io = new Server(server, {
