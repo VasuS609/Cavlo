@@ -4,8 +4,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 
 const app = express();
-const allowedOrigin = process.env.CORS_ORIGIN || "*";
-app.use(cors({ origin: allowedOrigin }));
+app.use(cors());
 
 const PORT = Number(process.env.PORT) || 8081;
 const server = http.createServer(app);
@@ -14,7 +13,10 @@ const server = http.createServer(app);
 const rooms = new Map<string, Set<string>>(); // roomId → Set<socketId>
 
 const io = new Server(server, {
-  cors: { origin: allowedOrigin },
+  cors:{
+    origin:`http://localhost:${PORT}`,
+    methods:["POST", "GET"]
+  },
 });
 
 app.get("/health", (req, res) => {
@@ -23,6 +25,10 @@ app.get("/health", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
+
+  socket.on("start", ({room}:{room:string})=>{
+
+  })
 
   socket.on("join", ({ room }: { room: string }) => {
     const targetRoom = room || "default";
@@ -79,15 +85,28 @@ io.on("connection", (socket) => {
     io.to(data.to).emit("ice-candidate", { from: socket.id, candidate: data.candidate });
   });
 
-  socket.on("leave-room", ({ room }: { room: string }) => {
-    if (rooms.has(room)) {
+  socket.on("leave-room", () => {
+    const room = socket.data.room;
+
+    // if (rooms.has(room)) {
+    //   const roomSet = rooms.get(room)!;
+    //   roomSet.delete(socket.id);
+    //   if (roomSet.size === 0) {
+    //     rooms.delete(room);
+    //   }
+    // }
+    // socket.leave(room);
+
+    if(room && room.has(room)){
       const roomSet = rooms.get(room)!;
       roomSet.delete(socket.id);
-      if (roomSet.size === 0) {
+      if(roomSet.size == 0){
         rooms.delete(room);
       }
-    }
-    socket.leave(room);
+      socket.leave(room);
+      socket.to(room).emit("user-left", {peerId:socket.id});
+      console.log(`Socket ${socket.id} left room: ${room}`)
+      }
     socket.to(room).emit("user-left", { peerId: socket.id });
   });
 
@@ -98,7 +117,7 @@ io.on("connection", (socket) => {
       if (roomSet.has(socket.id)) {
         roomSet.delete(socket.id);
         socket.to(roomId).emit("user-left", { peerId: socket.id });
-        if (roomSet.size === 0) {
+        if (roomSet.size === 0) {//room is deleted if only one user was there
           rooms.delete(roomId);
         }
       }
@@ -110,19 +129,3 @@ io.on("connection", (socket) => {
 server.listen(PORT, () => {
   console.log(`Signaling server running on http://localhost:${PORT}`);
 });
-
-// ===== Chat WebSocket (unchanged, but note: unrelated to WebRTC) =====
-import { WebSocketServer } from "ws";
-const CHAT_PORT = Number(process.env.CHAT_PORT) || 8082;
-const wss = new WebSocketServer({ port: CHAT_PORT });
-
-wss.on("connection", (ws) => {
-  console.log("Chat WS client connected");
-  ws.on("message", (message) => {
-    wss.clients.forEach((client) => {
-      if (client.readyState === 1) client.send(message);
-    });
-  });
-  ws.on("close", () => console.log("Chat WS client disconnected"));
-});
-console.log(`Chat WS listening on ws://localhost:${CHAT_PORT}`);
