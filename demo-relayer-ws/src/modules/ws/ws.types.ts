@@ -1,4 +1,5 @@
 import { Type } from "@sinclair/typebox";
+import { Static } from "@sinclair/typebox";
 
 export const WsMessageSchema = Type.Object({
   type: Type.Union([
@@ -12,7 +13,7 @@ export const WsMessageSchema = Type.Object({
   payload: Type.Optional(Type.Any()),
 });
 
-export type WsMessageType = typeof WsMessageSchema;
+export type WsMessageType = Static<typeof WsMessageSchema>;
 
 export const WsResponseSchema = Type.Object({
   type: Type.Union([
@@ -30,4 +31,4 @@ export const WsResponseSchema = Type.Object({
   payload: Type.Any(),
 });
 
-export type WsResponse = typeof WsResponseSchema;
+export type WsResponse = Static<typeof WsResponseSchema>;

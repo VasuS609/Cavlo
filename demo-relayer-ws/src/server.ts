@@ -17,7 +17,9 @@ const startServer = async () => {
     process.on("SIGTERM", handleSignal);
     process.on("SIGINT", handleSignal);
   } catch (error) {
-    logger.error("Failed to start server:", { error: (error as Error).message });
+    logger.error("Failed to start server:", {
+      error: (error as Error).message,
+    });
     process.exit(1);
   }
 };

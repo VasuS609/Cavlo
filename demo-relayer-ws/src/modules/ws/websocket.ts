@@ -3,6 +3,7 @@ import { WsMessageSchema, WsResponseSchema } from "./ws.types";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
 import { logger } from "../../utils/logger";
 import { roomManager } from "./room-manager";
+import { env } from "../../config/env";
 import {
   handleJoinRoom,
   handleLeaveRoom,
@@ -26,6 +27,7 @@ export const websocketPlugin = new Elysia({ name: "websocket" }).ws("/ws", {
     wsRegistry.set(ws.id, ws);
 
     // Set up heartbeat
+    const heartbeatIntervalMs = env.WS_HEARTBEAT_INTERVAL;
     const heartbeat = setInterval(() => {
       try {
         ws.send({ type: "pong", payload: null });
@@ -33,7 +35,7 @@ export const websocketPlugin = new Elysia({ name: "websocket" }).ws("/ws", {
         logger.error(`Heartbeat failed for ${ws.id}:`, { error: err });
         clearInterval(heartbeat);
       }
-    }, 30000);
+    }, heartbeatIntervalMs);
 
     // Store interval in ws.data for cleanup
     (ws.data as any).heartbeat = heartbeat;
@@ -54,7 +56,10 @@ export const websocketPlugin = new Elysia({ name: "websocket" }).ws("/ws", {
       // Message is already parsed as an object
       parsed = msg;
     } else {
-      ws.send({ type: "error", payload: "Message must be a valid JSON object or string" });
+      ws.send({
+        type: "error",
+        payload: "Message must be a valid JSON object or string",
+      });
       return;
     }
 

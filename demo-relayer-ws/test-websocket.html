@@ -110,9 +110,21 @@
             };
             
             ws.onmessage = (event) => {
-                const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                let data;
+                if (typeof event.data === 'string') {
+                    try {
+                        data = JSON.parse(event.data);
+                    } catch (e) {
+                        console.error('Failed to parse WebSocket message:', e);
+                        addMessage(`Received (non-JSON): ${event.data}`);
+                        return;
+                    }
+                } else {
+                    data = event.data;
+                }
+
                 addMessage(`Received: ${JSON.stringify(data)}`);
-                
+
                 // Handle specific message types
                 if (data.type === 'existing-users') {
                     addMessage(`Existing users in room: ${data.payload.peers.join(', ') || 'none'}`);
@@ -123,15 +135,17 @@
                 }
             };
             
-            ws.onclose = () => {
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                addMessage(`WebSocket error (readyState: ${ws.readyState})`);
+            };
+
+            ws.onclose = (event) => {
                 isConnected = false;
                 statusEl.textContent = 'Disconnected';
                 statusEl.className = 'status disconnected';
-                addMessage('Disconnected from WebSocket server');
-            };
-            
-            ws.onerror = (error) => {
-                addMessage(`WebSocket error: ${error}`);
+                console.log('WebSocket closed:', event.code, event.reason);
+                addMessage(`WebSocket closed (code: ${event.code}, reason: ${event.reason || 'none'}, readyState: ${ws.readyState})`);
             };
         });
 

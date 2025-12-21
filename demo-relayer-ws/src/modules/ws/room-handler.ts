@@ -8,16 +8,21 @@ export const wsToRoomMap = new Map<string, string>();
 
 export function handleJoinRoom(ws: any, payload: any) {
   const targetRoom = payload?.room || "default";
-  
+
   // Leave any previous rooms first
   const currentRoom = wsToRoomMap.get(ws.id);
   if (currentRoom) {
-    roomManager.leaveRoom(currentRoom, ws.id);
-    broadcastToRoom(currentRoom, { type: "user-left", payload: { peerId: ws.id } }, ws.id);
+    // Remove from old room tracking and notify others
+    broadcastToRoom(
+      currentRoom,
+      { type: "user-left", payload: { peerId: ws.id } },
+      ws.id,
+    );
   }
 
   // Join new room
   roomManager.joinRoom(targetRoom, ws.id);
+  // Update our local mapping
   wsToRoomMap.set(ws.id, targetRoom);
 
   // Get existing peers in the room (excluding this socket)
@@ -27,7 +32,11 @@ export function handleJoinRoom(ws: any, payload: any) {
   ws.send({ type: "existing-users", payload: { peers: existingPeers } });
 
   // Notify others in the room about the new user
-  broadcastToRoom(targetRoom, { type: "new-user", payload: { peerId: ws.id } }, ws.id);
+  broadcastToRoom(
+    targetRoom,
+    { type: "new-user", payload: { peerId: ws.id } },
+    ws.id,
+  );
 
   logger.debug(`Socket ${ws.id} joined room: ${targetRoom}`);
 }
@@ -44,7 +53,11 @@ export function handleLeaveRoom(ws: any) {
   wsToRoomMap.delete(ws.id);
 
   // Notify others in the room
-  broadcastToRoom(roomId, { type: "user-left", payload: { peerId: ws.id } }, ws.id);
+  broadcastToRoom(
+    roomId,
+    { type: "user-left", payload: { peerId: ws.id } },
+    ws.id,
+  );
 
   logger.debug(`Socket ${ws.id} left room: ${roomId}`);
 }
@@ -78,13 +91,17 @@ export function handleForwardMessage(ws: any, message: any) {
   }
 
   // Send message to target with sender info
-  targetWs.send({ 
-    type: message.type, 
-    payload: { ...forwardPayload, from: ws.id } 
+  targetWs.send({
+    type: message.type,
+    payload: { ...forwardPayload, from: ws.id },
   });
 }
 
-export function broadcastToRoom(roomId: string, message: any, excludeWsId?: string) {
+export function broadcastToRoom(
+  roomId: string,
+  message: any,
+  excludeWsId?: string,
+) {
   const members = roomManager.getRoomMembers(roomId, excludeWsId);
   for (const memberId of members) {
     const ws = wsRegistry.get(memberId);
@@ -92,7 +109,10 @@ export function broadcastToRoom(roomId: string, message: any, excludeWsId?: stri
       try {
         ws.send(message);
       } catch (err) {
-        logger.error("Failed to broadcast to room member", { error: err, memberId });
+        logger.error("Failed to broadcast to room member", {
+          error: err,
+          memberId,
+        });
       }
     }
   }

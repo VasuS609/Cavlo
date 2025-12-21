@@ -9,9 +9,11 @@ import { logger } from "./utils/logger";
 const app = new Elysia({
   name: "main-app",
 })
-  .use(cors({
-    origin: env.CORS_ORIGIN,
-  }))
+  .use(
+    cors({
+      origin: env.CORS_ORIGIN,
+    }),
+  )
   .use(
     rateLimit({
       max: 100,
@@ -27,13 +29,16 @@ const app = new Elysia({
     return {
       success: true,
       data: { status: "healthy", timestamp: Date.now() },
-      error: null
+      error: null,
     };
   })
   .use(websocketPlugin)
   .use(monitoringPlugin)
   .onError(({ code, error, set }) => {
-    logger.error("Application error", { code, message: (error as Error).message });
+    logger.error("Application error", {
+      code,
+      message: (error as Error).message,
+    });
 
     switch (code) {
       case "NOT_FOUND":
