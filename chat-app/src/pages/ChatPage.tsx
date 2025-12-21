@@ -1,5 +1,4 @@
 import { useAuth0 } from "../authentication/useAuth0Safe";
-import LogoutButton from "../authentication/LogoutButton";
 import LoginButton from "../authentication/LoginButton";
 import Chat from "../Chat/Chat";
 
@@ -15,13 +14,20 @@ export default function ChatPage() {
       </div>
     );
 
+  
   return (
-    <div className="p-10 text-white">
-      <h1 className="text-2xl font-bold">Chat Page</h1>
-      <div className="mb-4">
-        <LogoutButton />
+    <div className="p-5 w-full flex text-white ">
+      <a href="/">
+        <div>Cavlo</div>
+      </a>
+      <div className="flex ">
+      
       </div>
-      <Chat />
+      <div className="w-full flex justify-center">
+        <Chat />
+
+      </div>
+      
     </div>
   );
 }

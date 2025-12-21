@@ -33,8 +33,10 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.8",
+    "@tabler/icons-react": "^3.36.0",
     "clsx": "^2.1.1",
-    "motion": "^12.23.25",
+    "motion": "^12.23.26",
     "tailwind-merge": "^3.4.0"
   },
   "engines": {

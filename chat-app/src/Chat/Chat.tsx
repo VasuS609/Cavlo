@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useWebSocket } from "./useWebSocket";
-import { BackgroundRippleEffect } from "../components/ui/background-ripple-effect";
 import { HoverBorderGradient } from "../components/ui/hover-border-gradient";
 import { AspectRatio } from "../components/ui/aspect-ratio";
 
@@ -63,7 +62,7 @@ export default function Chat() {
   }
 
   return (
-    <div className="h-screen p-2 grid grid-rows-[1fr_auto] gap-2 text-black bg-gray-100  transition w-110">
+    <div className="h-[calc(100vh-4rem)] p-2 grid grid-rows-[1fr_auto] gap-2 text-black bg-gray-100  transition w-110">
       
       <div
         id="chatBox"

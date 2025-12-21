@@ -9,6 +9,9 @@ wss.on("connection", (ws) => {
       if (client.readyState === 1) client.send(message);
     });
   });
+  ws.on("errro", ()=>{
+    console.log("Unexpected error occured: ", Error);
+  })
   ws.on("close", () => console.log("Chat WS client disconnected"));
 });
 console.log(`Chat WS listening on ws://localhost:${CHAT_PORT}`);

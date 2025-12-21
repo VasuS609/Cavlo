@@ -5,7 +5,7 @@ export default function ChatButton() {
 
   const handleChat = () => {
     console.log("redirected to chat section");
-    navigate("/chat");
+    navigate("/");
   };
 
   return (
@@ -13,7 +13,7 @@ export default function ChatButton() {
       onClick={handleChat} 
       className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-200"
     >
-      Go to Chat
+      Bcak to landing Page
     </button>
   );
 }

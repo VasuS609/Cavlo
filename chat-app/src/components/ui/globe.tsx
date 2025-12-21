@@ -258,9 +258,9 @@ export function World(props: WorldProps) {
         color={globeConfig.directionalLeftLight}
         position={new Vector3(-400, 100, 400)}
       />
-      <directionalLight
-        color={globeConfig.directionalTopLight}
-        position={new Vector3(-200, 500, 200)}
+        <directionalLight
+        color={globeConfig.directionalLeftLight}
+        position={new Vector3(-250, 150, 300)}
       />
       <pointLight
         color={globeConfig.pointLight}

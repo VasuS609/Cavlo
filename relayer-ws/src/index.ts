@@ -9,17 +9,17 @@ app.use(cors());
 const PORT = Number(process.env.PORT) || 8081;
 const server = http.createServer(app);
 
-// ✅ Use only ONE source of truth for room membership
+// Use only ONE source of truth for room membership
 const rooms = new Map<string, Set<string>>(); // roomId → Set<socketId>
 
 const io = new Server(server, {
   cors:{
     origin:`http://localhost:${PORT}`,
-    methods:["POST", "GET"]
+    methods:["POST", "GET"]    // Browser ⇄⇄⇄ Server   creating WebSocket pipe
   },
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (req, res) => { //get route
   res.json({ status: "ok", timestamp: Date.now() });
 });
 
@@ -85,8 +85,8 @@ io.on("connection", (socket) => {
   socket.on("leave-room", () => {
     const room = socket.data.room;
 
-
-    if(room && room.has(room)){
+// Remove the user from the room, Clean up empty rooms, Tell other users in the room that this user left
+    if(room && rooms.has(room)){
       const roomSet = rooms.get(room)!;
       roomSet.delete(socket.id);
       if(roomSet.size == 0){
@@ -96,7 +96,6 @@ io.on("connection", (socket) => {
       socket.to(room).emit("user-left", {peerId:socket.id});
       console.log(`Socket ${socket.id} left room: ${room}`)
       }
-    socket.to(room).emit("user-left", { peerId: socket.id });
   });
 
   // --- Cleanup on disconnect ---

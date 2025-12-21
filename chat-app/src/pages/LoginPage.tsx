@@ -2,7 +2,7 @@ import { useAuth0 } from "../authentication/useAuth0Safe";
 import LoginButton from "../authentication/LoginButton";
 import LogoutButton from "../authentication/LogoutButton";
 import Profile from "../authentication/Profile";
-import ChatButton from "../authentication/ChatButton";
+import ChatButton from "../authentication/RedirectingPage";
 
 export default function LoginPage() {
   const { isAuthenticated, isLoading, error } = useAuth0();
