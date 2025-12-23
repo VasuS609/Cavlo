@@ -89,8 +89,6 @@ export default function LandingPage() {
                   <div className="border-2 border-gray-600 hover:border-gray-400 h-10 w-10 rounded-full cursor-pointer transition-colors">
                     <UserProfile />
                   </div>
-
-                  <LogoutButton />
                 </div>
               ) : (
                 <button

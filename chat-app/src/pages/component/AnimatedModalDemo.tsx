@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import {
   Modal,
   ModalBody,
@@ -8,8 +10,11 @@ import {
   ModalTrigger,
 } from "../../components/ui/animated-modal";
 import { motion } from "motion/react";
+import LoginButton from "../../authentication/LoginButton";
 
 export function AnimatedModalDemo() {
+  const {isAuthenticated} = useAuth0();
+
  const worldImages = [
   "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=3000&auto=format&fit=crop", // Earth from space
   "https://images.unsplash.com/photo-1476820865390-c52aeebb9891?q=80&w=3000&auto=format&fit=crop", // World map
@@ -75,13 +80,23 @@ export function AnimatedModalDemo() {
               <FeatureItem icon={<ShieldIcon />} text="End-to-end encryption" />
             </div>
           </ModalContent>
+
           <ModalFooter className="gap-4">
-            <button className="px-2 py-1 bg-gray-200 text-black dark:bg-black dark:border-black dark:text-white border border-gray-300 rounded-md text-sm w-28">
+            {isAuthenticated? (
+              <div>
+
+              
+               <button className="px-2 py-1 bg-gray-200 text-black dark:bg-black dark:border-black dark:text-white border border-gray-300 rounded-md text-sm w-28">
               Later
             </button>
             <button className="bg-black text-white dark:bg-white dark:text-black text-sm px-2 py-1 rounded-md border border-black w-28">
               Join Now
             </button>
+            </div>
+            ):(
+              <LoginButton/>
+            )}
+           
           </ModalFooter>
         </ModalBody>
       </Modal>

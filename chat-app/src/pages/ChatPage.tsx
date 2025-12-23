@@ -7,27 +7,26 @@ export default function ChatPage() {
 
   if (!isAuthenticated)
     return (
-      <div className="p-10 text-white">
-        <h1 className="text-2xl font-bold mb-4">Chat Page</h1>
-        <p className="mb-4">You must log in first.</p>
-        <LoginButton />
+      <div className="min-h-screen bg-linear-to-b from-[#0f0f12] via-[#141620] to-[#1a1e27] flex items-center justify-center p-6 text-white">
+        <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-6 shadow-2xl">
+          <h1 className="text-2xl font-bold mb-2">Chat Page</h1>
+          <p className="mb-6 text-neutral-300">You must log in first.</p>
+          <LoginButton />
+        </div>
       </div>
     );
 
   
   return (
-    <div className="p-5 w-full flex text-white ">
-      <a href="/">
-        <div>Cavlo</div>
-      </a>
-      <div className="flex ">
-      
-      </div>
+    <div className="min-h-screen bg-linear-to-b from-[#0f0f12] via-[#141620] to-[#1a1e27] p-6 text-white">
+      <header className="flex items-center justify-between mb-6">
+        <a href="/" className="text-lg font-semibold hover:opacity-80 transition-opacity">Cavlo</a>
+      </header>
       <div className="w-full flex justify-center">
-        <Chat />
-
+        <div className="w-full max-w-5xl rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-3 shadow-2xl">
+          <Chat />
+        </div>
       </div>
-      
     </div>
   );
 }

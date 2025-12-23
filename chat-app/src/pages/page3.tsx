@@ -20,7 +20,7 @@ export default function Page3() {
 
       {/* 🔹 Overlay Content */}
       <div className="relative z-10 flex items-center h-screen px-16">
-        <article className="max-w-xl bg-white/70 dark:bg-black/20 p-6 rounded-lg shadow-lg backdrop-blur-md text-black dark:text-white">
+        <article className="max-w-xl bg-white/70 dark:bg-black/20 p-6 rounded-lg shadow-lg backdrop-blur-md text-black dark:text-white hover:scale-105 transition-transform duration-500 ease-linear">
 
           <time className="text-sm opacity-70">Mar 10, 2020</time>
 
