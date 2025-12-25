@@ -10,6 +10,7 @@ import Page3 from "./page3";
 import { TypewriterEffect } from "../components/ui/typewriter-effect";
 import { AnimatedModalDemo } from "./component/AnimatedModalDemo";
 import { Page4 } from "./Page4";
+import LoginButton from "./component/loginButton";
 
 const words = ["trust", "closeness", "together", "globally"];
 
@@ -60,12 +61,12 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full min-h-screen bg-linear-to-b from-[#b1b1b3] via-[#828282] to-[#000000]">
+    <div className="w-full min-h-screen bg-linear-to-b font-inter from-[#ffffff] via-[#e6e6e6] to-[#ebebeb]">
       {/* Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#b1b1b3] backdrop-blur-lg border-b border-[#a6a6a6] shadow-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#f3f3f7] backdrop-blur-lg border-b border-[#dedbdb] shadow-lg">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-around items-center h-16">
-            <div className="text-white font-bold text-2xl tracking-tight">
+            <div className="text-black font-bold text-2xl tracking-tight">
               Cavlo
             </div>
 
@@ -91,12 +92,7 @@ export default function LandingPage() {
                   </div>
                 </div>
               ) : (
-                <button
-                  onClick={() => navigate("/login")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-medium transition-all shadow-md"
-                >
-                  Login
-                </button>
+                <LoginButton/>
               )}
             </div>
           </div>
@@ -104,8 +100,8 @@ export default function LandingPage() {
       </nav>
 
       {/* Main */}
-      <main className="pt-24 pb-16">
-        <TypewriterEffect words={words2} className="py-20" />
+      <main className="pt-25">
+        <TypewriterEffect words={words2} className="py-10" />
 
         {/* Hero */}
         <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-20">
@@ -117,8 +113,8 @@ export default function LandingPage() {
             </div>
 
             <div className="flex-1 text-center lg:text-left">
-              <div className="text-4xl font-normal text-neutral-100">
-                Build <FlipWords words={words} /> <br />
+              <div className="text-4xl font-normal text-black">
+                Build <FlipWords words={words} className="text-neutral-800 " /> <br />
                 Where Every Conversation Bridges Continents
               </div>
               <AnimatedModalDemo/>

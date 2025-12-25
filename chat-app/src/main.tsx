@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { BrowserRouter } from "react-router-dom";
 
@@ -41,6 +42,8 @@ const renderApp = () => {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {renderApp()}
+    <ErrorBoundary>
+      {renderApp()}
+    </ErrorBoundary>
   </StrictMode>
 );

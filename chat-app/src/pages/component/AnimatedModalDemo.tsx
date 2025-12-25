@@ -25,7 +25,7 @@ export function AnimatedModalDemo() {
   return (
     <div className="-mt-8 ml-10 flex items-center justify-center">
       <Modal>
-        <ModalTrigger className="bg-black dark:bg-white/90 dark:text-black text-white flex justify-center group/modal-btn">
+        <ModalTrigger className="bg-black dark:bg-white/90 dark:text-black shadow-xl text-white flex justify-center group/modal-btn">
           <span className="group-hover/modal-btn:translate-x-80 text-center transition duration-800">
             Start Your Global Conversation
           </span>

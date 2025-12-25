@@ -9,8 +9,8 @@ wss.on("connection", (ws) => {
       if (client.readyState === 1) client.send(message);
     });
   });
-  ws.on("errro", ()=>{
-    console.log("Unexpected error occured: ", Error);
+  ws.on("error", (err)=>{
+    console.log("Unexpected error occurred: ", err);
   })
   ws.on("close", () => console.log("Chat WS client disconnected"));
 });

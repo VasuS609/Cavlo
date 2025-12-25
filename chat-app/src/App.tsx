@@ -7,6 +7,7 @@ import Cavlo from "./Cavlo/cavlo";
 
 export default function App() {
   return (
+    
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />

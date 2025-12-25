@@ -93,11 +93,11 @@ const people = [
 
 export default function Page2() {
   return (
-    <div className="w-full rounded-3xl min-h-screen flex  flex-col justify-center items-center pt-10 mb-10">
+    <div className="w-full rounded-3xl min-h-screen flex  flex-col justify-center items-center pt-5 mb-10">
       {/* Center Text */}
         <div className="w-full px-4 mb-16">
   <div className="moving-border-card w-full max-w-6xl mx-auto rounded-3xl text-center font-sans antialiased relative ease-linear duration-900 hover:scale-105 hover:shadow-3xl shadow-2xl shadow-neutral-600 p-12 md:p-16">
-    <p className="text-white text-lg lg:text-xl leading-relaxed">
+    <p className="text-black text-lg lg:text-xl leading-relaxed">
       Join millions across 190+ countries speaking, laughing, brainstorming, and building—
       <EncryptedText
         text=" face-to-face, voice-to-voice, heartbeat-to-heartbeat—in stunning clarity."

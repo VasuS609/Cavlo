@@ -20,6 +20,7 @@ function AnimatedButton() {
       </span>
       
       {/* Hover text overlay */}
+      <a href="/">
       <span 
         className="absolute top-0 left-0 text-[2em] tracking-[3px] uppercase font-['Arial'] overflow-hidden transition-all duration-500 ease-in-out"
         style={{
@@ -33,6 +34,7 @@ function AnimatedButton() {
       >
         &nbsp;Convium&nbsp;
       </span>
+      </a>
     </button>
   );
 }

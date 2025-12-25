@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
+/* Utility to explicitly apply Inter where needed */
+.font-inter {
+  font-family: 'Inter', sans-serif;
+}
+
 .moving-border {
   --primary: 24, 92%, 58%; /* HSL without 'hsl()' prefix for Tailwind compatibility */
   position: relative;
@@ -92,13 +97,15 @@
 }
 
 
+html {
+  font-family: 'Inter', sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
   background-color: #1a1e27;
-   font-family: 'Inter', sans-serif;
-   color: #e2e8f0;
+  color: #e2e8f0;
 }
 
 #root {

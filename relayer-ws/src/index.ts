@@ -2,6 +2,7 @@ import http from "http";
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
+import "./chat"; // Start the chat WebSocket server
 
 const app = express();
 app.use(cors());
@@ -9,7 +10,6 @@ app.use(cors());
 const PORT = Number(process.env.PORT) || 8081;
 const server = http.createServer(app);
 
-// Use only ONE source of truth for room membership
 const rooms = new Map<string, Set<string>>(); // roomId → Set<socketId>
 
 const io = new Server(server, {
@@ -50,16 +50,14 @@ io.on("connection", (socket) => {
     socket.join(targetRoom);
     socket.data.room = targetRoom;
 
-    // Track in our rooms Map
+  
     if (!rooms.has(targetRoom)) {
       rooms.set(targetRoom, new Set());
     }
     rooms.get(targetRoom)!.add(socket.id);
 
-    // Get existing peers (from OUR tracking, not adapter)
     const existingPeers = Array.from(rooms.get(targetRoom)!).filter(id => id !== socket.id);
 
-    // Send to joining client
     socket.emit("existing-users", { peers: existingPeers });
 
     // Notify others in the room
@@ -70,7 +68,6 @@ io.on("connection", (socket) => {
 
   // --- Signaling forwarding (room-safe) ---
   socket.on("offer", (data: { to: string; sdp: any }) => {
-    // Optional: verify 'to' is in same room (security)
     io.to(data.to).emit("offer", { from: socket.id, sdp: data.sdp });
   });
 

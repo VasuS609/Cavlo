@@ -1,4 +1,5 @@
-import { Header, Body, Footer } from "../VideoComponents";
+import { Body } from "../VideoComponents";
+import Header from "./header"
 
 
 export default function Cavlo() {
@@ -9,9 +10,9 @@ export default function Cavlo() {
       <Header />
       <div className="pt-20 px-4">
       
-        <Body />  // this is calllign to vidcomponents body
+        <Body /> 
       </div>
-      <Footer />
+      
     </div>
   );
 }

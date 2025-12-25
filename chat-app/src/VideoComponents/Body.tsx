@@ -15,7 +15,7 @@ export default function Body() {
   const [isLoading, setIsLoading] = useState(false);
   const [remoteStreams, setRemoteStreams] = useState<RemoteStream[]>([]);
   const [room, setRoom] = useState<string | null>(null);
-  const [isHost, setIsHost] = useState(false); // 👈 NEW: track role
+  const [isHost, setIsHost] = useState(false); 
 
   const localStreamRef = useRef<MediaStream | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -124,7 +124,7 @@ export default function Body() {
         // Host should NOT receive "existing-users" (they are first)
       }
 
-      // 🔸 GUEST: When joining, receive list of existing peers → but DO NOT offer!
+      //  GUEST: When joining, receive list of existing peers → but DO NOT offer!
       if (!amHost) {
         socket.on("existing-users", ({ peers }: { peers: string[] }) => {
           // Guest does nothing here — waits for offer from host
@@ -278,9 +278,9 @@ export default function Body() {
 
   return (
     <div className="p-4">
-      <h2 className="text-lg font-semibold mb-2">Cavlo WebRTC</h2>
+      <h2 className="text-lg font-semibold mb-2 flex ">Cavlo WebRTC</h2>
 
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         <div>
           <div>Local</div>
           <video ref={localVideoRef} autoPlay playsInline muted width={300} />
@@ -302,7 +302,7 @@ export default function Body() {
         </div>
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className="mt-4 flex gap-2 justify-center">
         {!isJoined ? (
           room ? (
             <button
