@@ -70,7 +70,7 @@ export default function Chat() {
               <div key={index} className="relative mb-4">
 
               
-                <div className="relative rounded-xl p-4 border dark:border-gray-700">
+                <div className="relative  p-4  rounded-xlborder dark:border-gray-700">
 
 
                   <div className="flex gap-3 items-start relative z-10">
