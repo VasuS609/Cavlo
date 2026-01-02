@@ -28,6 +28,7 @@ io.on("connection", (socket) => {
 
 
   socket.on("join", ({ room }: { room: string }) => {
+    console.log(`Socket ${socket.id} requests to join room: ${room}`);
     const targetRoom = room || "default";
     
     // Leave any previous rooms (clean up old room membership)

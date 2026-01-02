@@ -14,8 +14,11 @@ export default function Body() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [remoteStreams, setRemoteStreams] = useState<RemoteStream[]>([]);
-  const [room, setRoom] = useState<string | null>(null);
-  const [isHost, setIsHost] = useState(false); 
+  const [room, setRoom] = useState<string>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("room") || "default";
+  });
+  const [isHost, setIsHost] = useState(false);
 
   const localStreamRef = useRef<MediaStream | null>(null);
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -105,12 +108,10 @@ export default function Body() {
 
   // -------- Unified setup function --------
   const setupSocketHandlers = useCallback(
-    (socket: Socket, amHost: boolean) => {
-      const params = new URLSearchParams(window.location.search);
-      const roomFromQuery = params.get("room") || "default";
-      setRoom(roomFromQuery);
+    (socket: Socket, amHost: boolean, roomName: string) => {
+      const resolvedRoom = roomName || "default";
 
-      socket.emit("join", { room: roomFromQuery, isHost: amHost });
+      socket.emit("join", { room: resolvedRoom, isHost: amHost });
 
       // 🔹 HOST: When a new user joins, HOST sends offer
       if (amHost) {
@@ -199,6 +200,13 @@ export default function Body() {
     setError(null);
     setIsHost(true);
 
+    const roomName = room.trim();
+    if (!roomName) {
+      setError("Room name is required");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
       localStreamRef.current = stream;
@@ -208,7 +216,7 @@ export default function Body() {
       socketRef.current = socket;
 
       socket.on("connect", () => {
-        setupSocketHandlers(socket, true); // 🔹 I am host
+        setupSocketHandlers(socket, true, roomName); // 🔹 I am host
       });
 
       setIsJoined(true);
@@ -226,6 +234,13 @@ export default function Body() {
     setError(null);
     setIsHost(false);
 
+    const roomName = room.trim();
+    if (!roomName) {
+      setError("Room name is required");
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
       localStreamRef.current = stream;
@@ -235,7 +250,7 @@ export default function Body() {
       socketRef.current = socket;
 
       socket.on("connect", () => {
-        setupSocketHandlers(socket, false); // 🔸 I am guest
+        setupSocketHandlers(socket, false, roomName); // 🔸 I am guest
       });
 
       setIsJoined(true);
@@ -302,35 +317,55 @@ export default function Body() {
         </div>
       </div>
 
-      <div className="mt-4 flex gap-2 justify-center">
-        {!isJoined ? (
-          room ? (
-            <button
-              className="border-2 px-3 py-1 rounded-2xl"
-              onClick={handleJoin}
-              disabled={isLoading}
-            >
-              {isLoading ? "Joining..." : "Join"}
-            </button>
+      <div className="mt-4 flex flex-col gap-3 items-center">
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-gray-700" htmlFor="room-input">
+            Room
+          </label>
+          <input
+            id="room-input"
+            value={room}
+            onChange={(e) => setRoom(e.target.value)}
+            className="border px-3 py-1 rounded-2xl text-black"
+            placeholder="Enter room name"
+          />
+        </div>
+
+        <div className="flex gap-2 justify-center">
+          {!isJoined ? (
+            <>
+              <button
+                onClick={handleStart}
+                disabled={isLoading}
+                className="border-2 px-3 py-1 rounded-2xl"
+              >
+                {isLoading && isHost ? "Starting..." : "Start Room"}
+              </button>
+              <button
+                className="border-2 px-3 py-1 rounded-2xl"
+                onClick={handleJoin}
+                disabled={isLoading}
+              >
+                {isLoading && !isHost ? "Joining..." : "Join"}
+              </button>
+            </>
           ) : (
-            <button
-              onClick={handleStart}
-              disabled={isLoading}
-              className="border-2 px-3 py-1 rounded-2xl"
-            >
-              {isLoading ? "Starting..." : "Start Room"}
+            <button className="border-2 px-3 py-1 rounded-2xl" onClick={handleLeave}>
+              Leave
             </button>
-          )
-        ) : (
-          <button className="border-2 px-3 py-1 rounded-2xl" onClick={handleLeave}>
-            Leave
+          )}
+
+          <button
+            onClick={() => broadcastData("Hello from peer")}
+            disabled={!isJoined}
+            className="border-2 px-3 py-1 rounded-2xl disabled:opacity-50"
+          >
+            Send Data
           </button>
-        )}
+        </div>
 
-        <button onClick={() => broadcastData("Hello from peer")}>Send Data</button>
+        {error && <p className="text-red-500">{error}</p>}
       </div>
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

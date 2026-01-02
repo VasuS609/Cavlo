@@ -22,26 +22,18 @@ export default function Chat() {
 
   useEffect(() => {
     if (!data) return;
+    if (typeof data !== "string") {
+      console.warn("Ignoring non-text websocket payload", data);
+      return;
+    }
 
-    (async () => {
-      let text = "";
-
-      if (typeof data === "string") {
-        text = data;
-      } else if (data instanceof Blob) {
-        text = await data.text();
-      } else if (data instanceof ArrayBuffer) {
-        text = new TextDecoder().decode(data);
-      }
-
-      try {
-        const parsedMessage: Message = JSON.parse(text);
-        setMessages((prev) => [...prev, parsedMessage]);
-      } catch (e) {
-        console.error("Failed to parse message:", e);
-        console.log("Raw message:", text);
-      }
-    })();
+    try {
+      const parsedMessage: Message = JSON.parse(data);
+      setMessages((prev) => [...prev, parsedMessage]);
+    } catch (e) {
+      console.error("Failed to parse message:", e);
+      console.log("Raw message:", data);
+    }
   }, [data]);
 
   function handleMessage() {
