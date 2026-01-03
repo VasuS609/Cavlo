@@ -3,13 +3,11 @@ import { useNavigate } from "react-router-dom";
 import LandingPageContinue from "./page2";
 import { FlipWords } from "../components/ui/flip-words";
 import { useAuth0 } from "@auth0/auth0-react";
-import LogoutButton from "../authentication/LogoutButton";
 import UserProfile from "./component/UserProfile";
 import Footer from "./footer";
 import Page3 from "./page3";
 import { TypewriterEffect } from "../components/ui/typewriter-effect";
 import { AnimatedModalDemo } from "./component/AnimatedModalDemo";
-import { Page4 } from "./Page4";
 import LoginButton from "./component/loginButton";
 
 const words = ["trust", "closeness", "together", "globally"];
@@ -129,7 +127,6 @@ export default function LandingPage() {
 
         <section className="max-w-7xl mx-auto px-6 lg:px-8">
           <Page3 />
-          <Page4/>
           <Footer />
         </section>
       </main>

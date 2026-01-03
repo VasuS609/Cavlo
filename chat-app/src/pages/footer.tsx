@@ -53,8 +53,8 @@ export default function Footer() {
         
       </form>
   </div>
-  <div className="flex flex-col items-center">
-    <p className="font-semibold text-xs">Made with ❤️ by <a href="https://vaxh.space" target="_blank" className="text-xl cursor-pointer text-amber-700">Vash </a></p>
+  <div className="flex flex-col items-center text-gray-700 cursor-pointer">
+    <p className="font-semibold text-xs">Made with <span className="hover:scale-105 duration-105 ease-linear">❤️</span> by <a href="https://vaxh.space" target="_blank" className="text-xl cursor-pointer text-amber-700">Vash </a></p>
     <div>
       <span className="text-yellow-700  cursor-pointer" >srcCode</span>
     </div>
