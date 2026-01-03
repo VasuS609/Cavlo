@@ -31,6 +31,21 @@ const server = http.createServer(app);
 const rooms = new Map<string, Set<string>>(); // roomId → Set<socketId>
 const MAX_ROOM_SIZE = Number(process.env.MAX_ROOM_SIZE) || 10;
 
+// Rate limiting: Track message counts per socket
+const messageCounts = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX_MESSAGES = 100;
+
+// Cleanup rate limit data periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [socketId, data] of messageCounts.entries()) {
+    if (now > data.resetTime) {
+      messageCounts.delete(socketId);
+    }
+  }
+}, RATE_LIMIT_WINDOW);
+
 const io = new Server(server, {
   cors: {
     origin: ALLOWED_ORIGINS,
@@ -43,8 +58,31 @@ const io = new Server(server, {
 });
 
 app.get("/health", (req, res) => { //get route
-  res.json({ status: "ok", timestamp: Date.now() });
+  res.json({ 
+    status: "ok", 
+    timestamp: Date.now(),
+    connections: io.engine.clientsCount,
+    rooms: rooms.size
+  });
 });
+
+// Rate limiting helper
+function checkRateLimit(socketId: string): boolean {
+  const now = Date.now();
+  const data = messageCounts.get(socketId);
+  
+  if (!data || now > data.resetTime) {
+    messageCounts.set(socketId, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+  
+  if (data.count >= RATE_LIMIT_MAX_MESSAGES) {
+    return false;
+  }
+  
+  data.count++;
+  return true;
+}
 
 io.on("connection", (socket) => {
   console.log(`Client connected: ${socket.id}`);
@@ -104,14 +142,26 @@ io.on("connection", (socket) => {
 
   // --- Signaling forwarding (room-safe) ---
   socket.on("offer", (data: { to: string; sdp: any }) => {
+    if (!checkRateLimit(socket.id)) {
+      socket.emit("error", { message: "Rate limit exceeded" });
+      return;
+    }
     io.to(data.to).emit("offer", { from: socket.id, sdp: data.sdp });
   });
 
   socket.on("answer", (data: { to: string; sdp: any }) => {
+    if (!checkRateLimit(socket.id)) {
+      socket.emit("error", { message: "Rate limit exceeded" });
+      return;
+    }
     io.to(data.to).emit("answer", { from: socket.id, sdp: data.sdp });
   });
 
   socket.on("ice-candidate", (data: { to: string; candidate: RTCIceCandidateInit }) => {
+    if (!checkRateLimit(socket.id)) {
+      socket.emit("error", { message: "Rate limit exceeded" });
+      return;
+    }
     io.to(data.to).emit("ice-candidate", { from: socket.id, candidate: data.candidate });
   });
 
