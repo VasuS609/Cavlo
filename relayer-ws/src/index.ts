@@ -2,7 +2,7 @@ import http from "http";
 import express from "express";
 import cors from "cors";
 import { Server } from "socket.io";
-import "./chat"; // Start the chat WebSocket server
+import "./chat";
 
 const app = express();
 

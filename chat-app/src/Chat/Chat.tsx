@@ -22,7 +22,7 @@ export default function Chat() {
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
   const chatUrl = (import.meta as any).env?.VITE_CHAT_WS_URL || "ws://localhost:8082";
-  const { send, data, readyState } = useWebSocket(chatUrl);
+  const { send, data, readyState, isConnecting } = useWebSocket(chatUrl);
 
   const isConnected = readyState === WebSocket.OPEN;
 
@@ -105,9 +105,14 @@ export default function Chat() {
         id="chatBox"
         className="overflow-y-auto p-2 h-[80vh] bg-white dark:bg-gray-800 rounded shadow z-10"
       >
-        {!isConnected && (
+        {isConnecting && (
           <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-2">
             Connecting to chat server...
+          </div>
+        )}
+        {readyState === WebSocket.CLOSED && !isConnecting && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-2">
+            Disconnected from chat server. Reconnecting...
           </div>
         )}
         
